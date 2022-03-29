@@ -5,8 +5,7 @@ const STORAGE_KEY = 'feedback-form-state';
 const form = document.querySelector('.feedback-form');
 const emailEl = document.querySelector('.feedback-form input');
 const messageEl = document.querySelector('.feedback-form textarea');
-let savedDataToLocalStorage;
-let parsedLocalStorageData;
+
 populateTextarea();
 
 const formData = {};
@@ -21,23 +20,22 @@ function textinput(e) {
 //При загрузке страницы проверяй состояние хранилища, и если там есть сохраненные данные, заполняй ими поля формы
 
 function populateTextarea() {
-  savedDataToLocalStorage = localStorage.getItem(STORAGE_KEY);
+  const savedDataToLocalStorage = localStorage.getItem(STORAGE_KEY);
 
   if (savedDataToLocalStorage) {
-    parsedLocalStorageData = JSON.parse(savedDataToLocalStorage);
+    const parsedLocalStorageData = JSON.parse(savedDataToLocalStorage);
     emailEl.value = parsedLocalStorageData.formData.email;
     messageEl.value = parsedLocalStorageData.formData.message;
   }
 }
 
 //form submit and reset it after submitting
-
 form.addEventListener('submit', onFormSubmit);
 let userRegistrationData = {};
 function onFormSubmit(evt) {
   evt.preventDefault();
-  userRegistrationData.email = parsedLocalStorageData.formData.email;
-  userRegistrationData.message = parsedLocalStorageData.formData.message;
+  userRegistrationData.email = emailEl.value;
+  userRegistrationData.message = messageEl.value;
 
   console.log(userRegistrationData);
   evt.currentTarget.reset();
