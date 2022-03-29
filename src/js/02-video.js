@@ -1,4 +1,5 @@
 import throttle from 'lodash.throttle';
+
 //Инициализируй плеер в файле скрипта как это описано в секции pre-existing player
 const iframe = document.querySelector('iframe');
 const player = new Vimeo.Player(iframe);
