@@ -23,32 +23,15 @@ const onPlay = function (data) {
 player.on('timeupdate', throttle(onPlay, 1000));
 
 //Time setup
-let timeFromStorage;
+const timeFromStorage = localStorage.getItem('videoplayer-current-time');
 
 //checking localstorage for null and if not - getting data from localstorage
 function checkForLocalstorageData() {
-  if (localStorage.getItem('videoplayer-current-time') === null) {
-    localStorage.setItem('videoplayer-current-time', JSON.stringify({ timeupdate: '0' }));
+  if (timeFromStorage) {
+    const parsedData = JSON.parse(timeFromStorage);
+    player.setCurrentTime(parsedData.timeupdate);
   }
-
-  timeFromStorage = localStorage.getItem('videoplayer-current-time');
 }
 checkForLocalstorageData();
 
 //parse data from localstorage and put it to the player method
-const parsedData = JSON.parse(timeFromStorage);
-
-player
-  .setCurrentTime(parsedData.timeupdate)
-  .then(function (seconds) {})
-  .catch(function (error) {
-    switch (error.name) {
-      case 'RangeError':
-        // the time was less than 0 or greater than the video’s duration
-        break;
-
-      default:
-        // some other error occurred
-        break;
-    }
-  });

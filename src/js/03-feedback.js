@@ -9,10 +9,11 @@ const messageEl = document.querySelector('.feedback-form textarea');
 populateTextarea();
 
 const formData = {};
+
 form.addEventListener('input', throttle(textinput, 500));
+
 function textinput(e) {
   formData[e.target.name] = e.target.value;
-
   //Отслеживай на форме событие input, и каждый раз записывай в локальное хранилище объект с полями email и message
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ formData }));
 }
@@ -21,9 +22,12 @@ function textinput(e) {
 
 function populateTextarea() {
   const savedDataToLocalStorage = localStorage.getItem(STORAGE_KEY);
-
-  if (savedDataToLocalStorage) {
-    const parsedLocalStorageData = JSON.parse(savedDataToLocalStorage);
+  const parsedLocalStorageData = JSON.parse(savedDataToLocalStorage);
+  if (
+    savedDataToLocalStorage &&
+    parsedLocalStorageData.formData.email &&
+    parsedLocalStorageData.formData.message
+  ) {
     emailEl.value = parsedLocalStorageData.formData.email;
     messageEl.value = parsedLocalStorageData.formData.message;
   }
@@ -34,10 +38,17 @@ form.addEventListener('submit', onFormSubmit);
 let userRegistrationData = {};
 function onFormSubmit(evt) {
   evt.preventDefault();
-  userRegistrationData.email = emailEl.value;
-  userRegistrationData.message = messageEl.value;
+  if (
+    emailEl.value !== null &&
+    emailEl.value !== '' &&
+    messageEl.value !== 0 &&
+    messageEl.value !== ''
+  ) {
+    userRegistrationData.email = emailEl.value;
+    userRegistrationData.message = messageEl.value;
 
-  console.log(userRegistrationData);
-  evt.currentTarget.reset();
-  localStorage.removeItem(STORAGE_KEY);
+    console.log(userRegistrationData);
+    evt.currentTarget.reset();
+    localStorage.removeItem(STORAGE_KEY);
+  }
 }
