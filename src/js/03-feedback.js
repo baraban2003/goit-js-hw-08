@@ -8,28 +8,28 @@ const messageEl = document.querySelector('.feedback-form textarea');
 
 populateTextarea();
 
-const formData = {};
-
 form.addEventListener('input', throttle(textinput, 500));
 
 function textinput(e) {
-  formData[e.target.name] = e.target.value;
+  //formData[e.target.name] = e.target.value;
   //Отслеживай на форме событие input, и каждый раз записывай в локальное хранилище объект с полями email и message
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ formData }));
+  let formData = localStorage.getItem(STORAGE_KEY);
+
+  formData = formData ? JSON.parse(formData) : {};
+  formData[e.target.name] = e.target.value;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
 }
 
 //При загрузке страницы проверяй состояние хранилища, и если там есть сохраненные данные, заполняй ими поля формы
 
 function populateTextarea() {
-  const savedDataToLocalStorage = localStorage.getItem(STORAGE_KEY);
-  const parsedLocalStorageData = JSON.parse(savedDataToLocalStorage);
-  if (
-    savedDataToLocalStorage &&
-    parsedLocalStorageData.formData.email &&
-    parsedLocalStorageData.formData.message
-  ) {
-    emailEl.value = parsedLocalStorageData.formData.email;
-    messageEl.value = parsedLocalStorageData.formData.message;
+  let savedDataToLocalStorage = localStorage.getItem(STORAGE_KEY);
+
+  if (savedDataToLocalStorage) {
+    savedDataToLocalStorage = JSON.parse(savedDataToLocalStorage);
+    Object.entries(savedDataToLocalStorage).forEach(([name, value]) => {
+      form.elements[name].value = value;
+    });
   }
 }
 
@@ -50,5 +50,7 @@ function onFormSubmit(evt) {
     console.log(userRegistrationData);
     evt.currentTarget.reset();
     localStorage.removeItem(STORAGE_KEY);
+  } else {
+    alert('Заполните все поля');
   }
 }
