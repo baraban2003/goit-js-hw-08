@@ -23,7 +23,7 @@ const makeSiteStructure = galleryItems.map(makeGalleryItemsLibrary).join('');
 
 images.innerHTML = makeSiteStructure;
 
-let lightbox = new SimpleLightbox('.gallery a', {
+let lightbox = new SimpleLightbox('.photo-card a', {
   close: true,
   captions: true,
   captionsData: 'alt',
